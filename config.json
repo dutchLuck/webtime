@@ -1,0 +1,60 @@
+{
+	"posParam1": {
+		"type": "positionParam",
+		"name": "SERVER_1 [.. [SERVER_N]]",
+		"help": "Mandatory Name or IP Address of a web server to query"
+	},
+	"debug": {
+		"type": "optFlg",
+		"default": "false",
+		"short": "D",
+		"long": "debug",
+		"help": "...... enable debug output mode"
+	},
+	"get": {
+		"type": "optFlg",
+		"default": "false",
+		"short": "g",
+		"long": "get",
+		"help": "...... switch from head request to get request"
+	},
+	"help": {
+		"type": "optFlg",
+		"default": "false",
+		"short": "h",
+		"long": "help",
+		"help": "...... this help / usage information"
+	},
+	"localtime": {
+		"type": "optFlg",
+		"default": "false",
+		"short": "l",
+		"long": "localtime",
+		"help": "...... enable local time information output"
+	},
+	"port": {
+		"type": "optInt",
+		"default": 80,
+		"short": "p",
+		"long": "port",
+		"most_pos_limit": 65535,
+		"most_neg_limit": 0,
+		"help": "INT .. set port number to INT - where 0 <= INT <= 65535"
+	},
+	"verbose": {
+		"type": "optInt",
+		"default": 1,
+		"short": "v",
+		"long": "verbose",
+		"most_pos_limit": 4,
+		"most_neg_limit": 0,
+		"help": "INT .. verbosity level set to INT - where 0 <= INT <= 4"
+	},
+	"version": {
+		"type": "optFlg",
+		"default": "false",
+		"short": "V",
+		"long": "version",
+		"help": "...... enable version information output"
+	}
+}
