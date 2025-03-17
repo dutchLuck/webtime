@@ -7,12 +7,22 @@
  * 
  * descendant of getWebTime 0v6
  *
+ * compile with the following steps; -
+ *  ./configure
+ *  make clean
+ *  make
+ *  make check
+ * 
+ * Known problems yet to be fixed; -
+ * 1. No automatic recovery from unknown server names
+ * 
  */
 
 #include  <stdio.h>			/* printf() sprintf() */
 #include  <string.h>		/* strdup() strstr() */
 #include  <sys/time.h>		/* gettimeofday() */
 #include  <libgen.h>		/* basename() */
+#include  <time.h>			/* asctime() */
 #include  "sockhelp.h"
 #include  "config.h"		/* struct config */
 
@@ -52,15 +62,16 @@ int  main( int  argc, char *  argv[] )  {
 	if ( config.D.active )  configuration_status( &config);
 	/* if -V, -v or -D then show version information */
 	if ( config.V.active || config.v.active || config.D.active )
-    	printf( "%s version %s\n", exeName, VERSION_INFO );
+		printf( "%s version %s\n", exeName, VERSION_INFO );
 	/* if -h (help) specified then show the help/usage information but don't finish */
 	if ( config.h.active )  usage( &config, exeName );
 	/* if -D (debug mode) then show the positional command line arguments */
-    if ( config.D.active )
-    	for ( index = indexToFirstNonConfig; index < argc; index++)
-        	printf ( "Debug: Non-option argument ( %d ): \"%s\"\n", index, argv[index]);
+	if ( config.D.active )  {
+		for ( index = indexToFirstNonConfig; index < argc; index++)
+			printf ( "Debug: Non-option argument ( %d ): \"%s\"\n", index, argv[index]);
+	}
 	/*  If verbosity level is 2 or more then output more info  */
-	if( config.D.active || ( config.v.active && ( config.v.optionInt > 1 )))  {
+	if ( config.D.active || ( config.v.active && ( config.v.optionInt > 1 )))  {
 		printf( "%s %s\n", HEADER, VERSION_INFO );
 		printf( "source file %s, compiled on %s at %s\n",
 			__FILE__, __DATE__, __TIME__ );
