@@ -78,6 +78,7 @@ struct config {
   struct optFlg D;  /* (debug) ...... enable debug output mode */
   struct optFlg g;  /* (get) ...... switch from head request to get request */
   struct optFlg h;  /* (help) ...... this help / usage information */
+  struct optInt i;  /* (inet) INT .. set IP version to 4, 6 or 46 - where 0 <= INT <= 64 */
   struct optFlg l;  /* (localtime) ...... enable local time information output */
   struct optInt p;  /* (port) INT .. set port number to INT - where 0 <= INT <= 65535 */
   struct optInt v;  /* (verbose) INT .. verbosity level set to INT - where 0 <= INT <= 4 */
@@ -85,7 +86,7 @@ struct config {
 };
 
 // getopt() option string
-#define OPTIONS ":Dghlp:v:V"
+#define OPTIONS ":Dghi:lp:v:V"
 
 void  usage ( struct config *  optStructPtr, char *  exeName );
 void  initConfiguration ( struct config *  optStructPtr );

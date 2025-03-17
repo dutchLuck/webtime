@@ -49,10 +49,11 @@ int  configureDoubleOption( struct optDbl *  dblStructPtr, char *  dblString ) {
 // Functions for Command Line Options Configuration from JSON Data
 void  usage( struct config *  opt, char *  exeName )  {
   printf( "Usage:\n");
-  printf( " %s [-D][-g][-h][-l][-p INT][-v INT][-V] SERVER_1 [.. [SERVER_N]]\n", exeName );
+  printf( " %s [-D][-g][-h][-i INT][-l][-p INT][-v INT][-V] SERVER_1 [.. [SERVER_N]]\n", exeName );
   printf( " %s %s\n", opt->D.optID, opt->D.helpStr ); /* debug */
   printf( " %s %s\n", opt->g.optID, opt->g.helpStr ); /* get */
   printf( " %s %s\n", opt->h.optID, opt->h.helpStr ); /* help */
+  printf( " %s %s\n", opt->i.optID, opt->i.helpStr ); /* inet4 */
   printf( " %s %s\n", opt->l.optID, opt->l.helpStr ); /* localtime */
   printf( " %s %s\n", opt->p.optID, opt->p.helpStr ); /* port */
   printf( " %s %s\n", opt->v.optID, opt->v.helpStr ); /* verbose */
@@ -76,6 +77,14 @@ void  initConfiguration ( struct config *  opt )  {
   opt->h.active = FALSE;
   opt->h.optID = "-h";
   opt->h.helpStr = "...... this help / usage information";
+// inet4: optInt
+  opt->i.active = FALSE;
+  opt->i.optID = "-i";
+  opt->i.helpStr = "INT .. set IP version to 4, 6 or 46 - where 0 <= INT <= 64";
+  opt->i.mostPosLimit = 64;
+  opt->i.mostNegLimit = 0;
+  opt->i.optionInt = 0;
+  opt->i.defaultVal = 0;
 // localtime: optFlg
   opt->l.active = FALSE;
   opt->l.optID = "-l";
@@ -111,14 +120,16 @@ int  setConfiguration ( int  argc, char *  argv[], struct config *  opt )  {
       case 'D': opt->D.active = TRUE; break; /* debug */
       case 'g': opt->g.active = TRUE; break; /* get */
       case 'h': opt->h.active = TRUE; break; /* help */
+      case 'i': configureIntegerOption( &opt->i, optarg ); break; /* inet */
       case 'l': opt->l.active = TRUE; break; /* localtime */
       case 'p': configureIntegerOption( &opt->p, optarg ); break; /* port */
       case 'v': configureIntegerOption( &opt->v, optarg ); break; /* verbose */
       case 'V': opt->V.active = TRUE; break; /* version */
       case '?' : {
-        if ( strchr( "pv", optopt ) != NULL ) {
+        if ( strchr( "ipv", optopt ) != NULL ) {
           fprintf (stderr, "Error: Option -%c requires an argument.\n", optopt);
           switch ( optopt ) {
+            case 'i': opt->i.active = FALSE; break;
             case 'p': opt->p.active = FALSE; break;
             case 'v': opt->v.active = FALSE; break;
           }
@@ -138,6 +149,8 @@ void  configuration_status( struct config *  opt )  {
   printf( "Debug: option -D is %sctive (-D %s)\n", (opt->D.active) ? "a" : "ina", opt->D.helpStr); /* debug */
   printf( "Debug: option -g is %sctive (-g %s)\n", (opt->g.active) ? "a" : "ina", opt->g.helpStr); /* get */
   printf( "Debug: option -h is %sctive (-h %s)\n", (opt->h.active) ? "a" : "ina", opt->h.helpStr); /* help */
+  printf( "Debug: option -i is %sctive (-i %s)\n", (opt->i.active) ? "a" : "ina", opt->i.helpStr); /* inet4 */
+  printf( "Debug: option -i value is %d, limits: %d .. %d\n", opt->i.optionInt, opt->i.mostNegLimit, opt->i.mostPosLimit); /* inet4 */
   printf( "Debug: option -l is %sctive (-l %s)\n", (opt->l.active) ? "a" : "ina", opt->l.helpStr); /* localtime */
   printf( "Debug: option -p is %sctive (-p %s)\n", (opt->p.active) ? "a" : "ina", opt->p.helpStr); /* port */
   printf( "Debug: option -p value is %d, limits: %d .. %d\n", opt->p.optionInt, opt->p.mostNegLimit, opt->p.mostPosLimit); /* port */

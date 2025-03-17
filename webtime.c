@@ -1,7 +1,7 @@
 /*
  * W E B T I M E . C
  *
- * webtime.c last edited on Wed Mar 12 11:28:01 2025 by ofh
+ * webtime.c last edited on Mon Mar 17 18:49:54 2025 by ofh
  *
  * Fetch the time from a WWW server
  * 
@@ -10,7 +10,7 @@
  */
 
 #include  <stdio.h>			/* printf() sprintf() */
-#include  <string.h>		/* strstr() */
+#include  <string.h>		/* strdup() strstr() */
 #include  <sys/time.h>		/* gettimeofday() */
 #include  <libgen.h>		/* basename() */
 #include  "sockhelp.h"
@@ -23,7 +23,7 @@
 #define  TRUE  (! FALSE)
 #endif
 
-#define  VERSION_INFO "0v1"
+#define  VERSION_INFO "0v2"
 #define  HEADER  "webtime"
 #define  BFR_SIZE  1024
 
@@ -75,7 +75,7 @@ void  cleanupStorage( void )  {
 }
 
 
-void  setExecutableName( char *  argv[] ) {
+void  setExecutableName( char *  argv[] )  {
 /* Isolate the name of the executable */
   if(( exePath = strdup( argv[0] )) == NULL )
     perror( "Warning: Unable to create duplicate of path to this executable" );
@@ -95,7 +95,8 @@ void  sendString( struct config *  cfg, int sckt, char *  str )  {
 int  processA_SingleCommandLineParameter( struct config *  cfg, char *  nameStrng )  {
 	char  out[ BFR_SIZE ];
 	int  result;
-	int  socket, count;
+	int  socket;
+	int  count = 0;
 	int  dateFound = FALSE;
 	struct timeval  now;		/* current time on local computer */
 
@@ -103,7 +104,11 @@ int  processA_SingleCommandLineParameter( struct config *  cfg, char *  nameStrn
     	printf( "Executing: processA_SingleCommandLineParameter( %s )\n", nameStrng );
 	}
 	sprintf( out, "%d", cfg->p.optionInt );		/* put port number into out string */
-  	socket = make_connection( out, SOCK_STREAM, nameStrng, cfg->v.active );
+  	/* socket = make_connection( out, SOCK_STREAM, nameStrng, cfg->v.active ); */
+	if ( cfg->i.optionInt == 4 )  count = 4;
+	else if ( cfg->i.optionInt == 6 )  count = 6;
+	else  count = 0;
+	socket = establish_sock_stream_connection ( nameStrng, out, count, TRUE );
 	if (( result = ( socket == -1 )))  {
 		printf( "?? unable to connect to %s\n", nameStrng );
 	}

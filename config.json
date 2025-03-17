@@ -25,6 +25,15 @@
 		"long": "help",
 		"help": "...... this help / usage information"
 	},
+	"inet4": {
+		"type": "optInt",
+		"default": 0,
+		"short": "i",
+		"long": "inet",
+		"most_pos_limit": 64,
+		"most_neg_limit": 0,
+		"help": "INT .. set IP version to 4, 6 or 46 - where 0 <= INT <= 64"
+	},
 	"localtime": {
 		"type": "optFlg",
 		"default": "false",

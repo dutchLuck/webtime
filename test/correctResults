@@ -1,0 +1,34 @@
+
+++++++++++ webtime -h  +++help option
+Usage:
+ webtime [-D][-g][-h][-i INT][-l][-p INT][-v INT][-V] SERVER_1 [.. [SERVER_N]]
+ -D ...... enable debug output mode
+ -g ...... switch from head request to get request
+ -h ...... this help / usage information
+ -i INT .. set IP version to 4, 6 or 46 - where 0 <= INT <= 64
+ -l ...... enable local time information output
+ -p INT .. set port number to INT - where 0 <= INT <= 65535
+ -v INT .. verbosity level set to INT - where 0 <= INT <= 4
+ -V ...... enable version information output
+ SERVER_1 [.. [SERVER_N]] Mandatory Name or IP Address of a web server to query
+++++++++++ Shell got Return code number 0 for -h options check++++++++++
+
+++++++++++ webtime -D  +++Debug option
+Debug: option -D is active (-D ...... enable debug output mode)
+Debug: option -g is inactive (-g ...... switch from head request to get request)
+Debug: option -h is inactive (-h ...... this help / usage information)
+Debug: option -i is inactive (-i INT .. set IP version to 4, 6 or 46 - where 0 <= INT <= 64)
+Debug: option -i value is 0, limits: 0 .. 64
+Debug: option -l is inactive (-l ...... enable local time information output)
+Debug: option -p is inactive (-p INT .. set port number to INT - where 0 <= INT <= 65535)
+Debug: option -p value is 80, limits: 0 .. 65535
+Debug: option -v is inactive (-v INT .. verbosity level set to INT - where 0 <= INT <= 4)
+Debug: option -v value is 1, limits: 0 .. 4
+Debug: option -V is inactive (-V ...... enable version information output)
+Debug: SERVER_1 [.. [SERVER_N]] (Mandatory Name or IP Address of a web server to query)
+webtime version 0v2
+webtime 0v2
+source file webtime.c, compiled on Mar 17 2025 at 19:34:32
+Executing: processNonSwitchCommandLineParameters()
+first index is 2 and last index is 1
+++++++++++ Shell got Return code number 0 for -D options check++++++++++

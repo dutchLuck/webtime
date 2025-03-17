@@ -13,6 +13,7 @@
  */
 
 #include "sockhelp.h"
+#include  <err.h>       /* errx() */
 
 /* Take a service name, and a service type, and return a port number.  If the
    service name is not found, it tries it as a decimal number.  The number
@@ -206,6 +207,51 @@ int  make_connection( char *  service, int  type, char *  netaddress, int  verbo
     return -1;
   }
   return sock;
+}
+
+
+int  establish_sock_stream_connection ( char *  servername, char *  service, int  ipversion, int  verbose ) {
+    struct addrinfo  hints;
+    struct addrinfo *  res;
+    struct addrinfo *  res0;
+    int  error;
+    int  s;
+    const char *  cause = NULL;
+
+    memset( &hints, 0, sizeof(hints));
+    if ( ipversion == 6 )  hints.ai_family = PF_INET6;      /* IP version 6  */
+    else if ( ipversion == 4 )  hints.ai_family = PF_INET;  /* IP version 4 i.e. dotted quad style */
+    else  hints.ai_family = PF_UNSPEC;                      /* don't care if it is 4 or 6 */
+    hints.ai_socktype = SOCK_STREAM;
+    error = getaddrinfo( servername, service, &hints, &res0);
+    if (error) {
+      if ( verbose )  printf( "Warning: getaddrinfo() failed with code 0x%0x\n", error );
+      errx( 1, "%s", gai_strerror(error));
+      /*NOTREACHED*/
+    }
+    s = -1;
+    for ( res = res0; res; res = res->ai_next) {
+       s = socket( res->ai_family, res->ai_socktype, res->ai_protocol);
+       if ( s < 0) {
+           cause = "socket";
+           continue;
+       }
+
+       if (connect( s, res->ai_addr, res->ai_addrlen) < 0) {
+           cause = "connect";
+           close(s);
+           s = -1;
+           continue;
+       }
+
+       break;  /* okay we got one */
+    }
+    if ( s < 0) {
+       err( 1, "%s", cause);
+       /*NOTREACHED*/
+    }
+    freeaddrinfo(res0);
+    return( s );
 }
 
 
