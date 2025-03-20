@@ -1,9 +1,9 @@
 # webtime
 This command line utility program is named "webtime" as it obtains
-the date and time from the header part of a web server reply.
+the (UTC) date and time from the header part of a web server reply.
 ```
-% ./webtime www.google.com                                                                                     
-Date: Mon, 17 Mar 2025 10:04:29 GMT
+% ./webtime www.google.com 
+Date: Wed, 19 Mar 2025 23:49:49 GMT
 %
 ```
 webtime has the following options; -
@@ -22,11 +22,28 @@ Usage:
  SERVER_1 [.. [SERVER_N]] Mandatory Name or IP Address of a web server to query
 %
 ```
+Further information about verbosity level follows; -
+```
+  -v 0 .. Output only the date and time 
+  -v 1 or no -v option specified .. Default verbosity level. It labels the date string.
+  -v 2 .. Adds the server name into the output string provided by -v1.
+  -v 3 .. Displays the request lines sent to the server and the reply lines from the server.
+  -v 4 .. Adds a count of the number of characters in each server reply line.
+```
+
 Visual comparison of the time on the local computer and the time
 on the web server can be made by using the -l option. For example; -
 ```
 % ./webtime -l www.google.com
-Local Host GMTime: Mon Mar 17 10:04:35 2025
-Server Date: Mon, 17 Mar 2025 10:04:35 GMT
+Local Host GMTime: Wed Mar 19 23:51:39 2025
+Server Date: Wed, 19 Mar 2025 23:51:39 GMT
+%
+```
+If multiple servers are specified then the -v 2 verbosity level provides
+the following; -
+```
+% ./webtime -v2 www.microsoft.com www.google.com
+"www.microsoft.com": Date: Wed, 19 Mar 2025 23:40:25 GMT
+"www.google.com": Date: Wed, 19 Mar 2025 23:40:25 GMT
 %
 ```

@@ -215,7 +215,7 @@ int  establish_sock_stream_connection ( char *  servername, char *  service, int
     struct addrinfo *  res;
     struct addrinfo *  res0;
     int  error;
-    int  s;
+    int  s = -1;     /* set socket ID to illegal socket number */
     const char *  cause = NULL;
 
     memset( &hints, 0, sizeof(hints));
@@ -223,34 +223,32 @@ int  establish_sock_stream_connection ( char *  servername, char *  service, int
     else if ( ipversion == 4 )  hints.ai_family = PF_INET;  /* IP version 4 i.e. dotted quad style */
     else  hints.ai_family = PF_UNSPEC;                      /* don't care if it is 4 or 6 */
     hints.ai_socktype = SOCK_STREAM;
-    error = getaddrinfo( servername, service, &hints, &res0);
+    error = getaddrinfo( servername, service, &hints, &res0 );
     if (error) {
-      if ( verbose )  printf( "Warning: getaddrinfo() failed with code 0x%0x\n", error );
-      errx( 1, "%s", gai_strerror(error));
-      /*NOTREACHED*/
+      if ( verbose )
+        printf( "Warning: getaddrinfo() failed with code 0x%0x for \"%s:%s\"\n", error, servername, service );
+      fprintf( stderr, "Error: \"%s\": %s\n", servername, gai_strerror(error));
     }
-    s = -1;
-    for ( res = res0; res; res = res->ai_next) {
-       s = socket( res->ai_family, res->ai_socktype, res->ai_protocol);
-       if ( s < 0) {
-           cause = "socket";
-           continue;
-       }
-
-       if (connect( s, res->ai_addr, res->ai_addrlen) < 0) {
-           cause = "connect";
-           close(s);
-           s = -1;
-           continue;
-       }
-
-       break;  /* okay we got one */
+    else  {
+      for ( res = res0; res; res = res->ai_next ) {
+         s = socket( res->ai_family, res->ai_socktype, res->ai_protocol);
+         if ( s < 0) {
+             cause = "socket";
+             continue;
+          }
+         if ( connect( s, res->ai_addr, res->ai_addrlen) < 0 ) {
+             cause = "connect";
+             close(s);
+             s = -1;
+             continue;
+         }
+         break;  /* okay we got one so break from loop */
+      }
+      if ( s < 0 ) {
+         fprintf( stderr, "Error: %s problem for \"%s\"\n", cause, servername );
+      }
+      freeaddrinfo( res0 );
     }
-    if ( s < 0) {
-       err( 1, "%s", cause);
-       /*NOTREACHED*/
-    }
-    freeaddrinfo(res0);
     return( s );
 }
 
