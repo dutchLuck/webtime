@@ -11,7 +11,7 @@ NAME3=sockhelp
 #
 OP_FILE_NAME=Makefile
 COMPILER=cc
-OPTIONS="-Wall -pedantic -DCLOCKS"
+OPTIONS="-Wall -pedantic -Wextra"
 LNK_OPTIONS=""
 TRGT=$NAME
 SRC=$NAME.c
@@ -73,10 +73,10 @@ echo -e "\tcd test; ./chk" >> $OP_FILE_NAME
 echo "" >> $OP_FILE_NAME
 #
 echo "clean:" >> $OP_FILE_NAME
-echo -e "\trm -f $TRGT $NAME.o $NAME1.o $NAME2.o" >> $OP_FILE_NAME
+echo -e "\trm -f $TRGT $NAME.o $NAME1.o $NAME2.o $NAME3.o" >> $OP_FILE_NAME
 echo "" >> $OP_FILE_NAME
 #
 echo "debug: clean" >> $OP_FILE_NAME
-echo -e "\t$COMPILER $OPTIONS -DDEBUG -g -o $TRGT $SRC $SRC1 $SRC2 $LNK_OPTIONS" >> $OP_FILE_NAME
+echo -e "\t$COMPILER $OPTIONS -DDEBUG -o $TRGT $SRC $SRC1 $SRC2 $SRC3 $LNK_OPTIONS" >> $OP_FILE_NAME
 echo "" >> $OP_FILE_NAME
 #

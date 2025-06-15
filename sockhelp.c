@@ -46,7 +46,7 @@ struct in_addr *  atoaddr( char *  address )  {
 
   /* First try it as aaa.bbb.ccc.ddd. */
   saddr.s_addr = inet_addr(address);
-  if (saddr.s_addr != -1) {
+  if (saddr.s_addr != (in_addr_t) -1) {
     return &saddr;
   }
   host = gethostbyname(address);
@@ -302,10 +302,10 @@ int  sock_write( int  sockfd, char *  buf, size_t  count )  {
    Note that if a single line exceeds the length of count, the extra data
    will be read and discarded!  You have been warned. */
 int  sock_gets( int  sockfd, char *  str, size_t  count )  {
-  int bytes_read;
-  int total_count = 0;
-  char *current_position;
-  char last_read = 0;
+  int  bytes_read;
+  size_t  total_count = 0;
+  char *  current_position;
+  char  last_read = 0;
 
   current_position = str;
   while (last_read != 10) {
@@ -314,13 +314,13 @@ int  sock_gets( int  sockfd, char *  str, size_t  count )  {
       /* The other side may have closed unexpectedly */
       return -1; /* Is this effective on other platforms than linux? */
     }
-    if ( (total_count < count) && (last_read != 10) && (last_read !=13) ) {
+    if ((total_count < count) && (last_read != 10) && (last_read !=13))  {
       current_position[0] = last_read;
       current_position++;
       total_count++;
     }
   }
-  if (count > 0)
+  if (count > (size_t) 0)
     current_position[0] = 0;
   return total_count;
 }
